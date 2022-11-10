@@ -7,6 +7,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.job.CompositeJobParametersValidator;
 import org.springframework.batch.core.job.DefaultJobParametersValidator;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -15,6 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Arrays;
+import java.util.List;
 
 @EnableBatchProcessing
 @SpringBootApplication
@@ -26,12 +30,19 @@ public class HelloWorldJob {
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public JobParametersValidator validator() {
-        DefaultJobParametersValidator validator = new DefaultJobParametersValidator();
+    public CompositeJobParametersValidator validator() {
+        CompositeJobParametersValidator validator = new CompositeJobParametersValidator();
+        DefaultJobParametersValidator defaultJobParametersValidator = new DefaultJobParametersValidator(
+                new String[] {"fileName"},
+                new String[] {"name"}
+        );
 
-        validator.setRequiredKeys(new String[] {"fileName"});
-        validator.setOptionalKeys(new String[] {"name"});
+        defaultJobParametersValidator.afterPropertiesSet();
 
+        validator.setValidators(
+                List.of(new ParameterValidator(),
+                        defaultJobParametersValidator)
+        );
         return validator;
     }
     @Bean
