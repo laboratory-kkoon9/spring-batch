@@ -40,7 +40,7 @@ public class ChunkJob {
     @Bean
     public Step chunkStep() {
         return this.stepBuilderFactory.get("chunkStep")
-                .<String, String>chunk(completionPolicy())
+                .<String, String>chunk(randomCompletionPolicy())
                 .reader(itemReader())
                 .writer(itemWriter())
                 .build();
@@ -67,17 +67,8 @@ public class ChunkJob {
     }
 
     @Bean
-    public CompletionPolicy completionPolicy() {
-        CompositeCompletionPolicy policy = new CompositeCompletionPolicy();
-
-        policy.setPolicies(
-                new CompletionPolicy[] {
-                        new TimeoutTerminationPolicy(3),
-                        new SimpleCompletionPolicy(1000)
-                }
-        );
-
-        return policy;
+    public CompletionPolicy randomCompletionPolicy() {
+        return new RandomChunkSizePolicy();
     }
 
     public static void main(String[] args) {
