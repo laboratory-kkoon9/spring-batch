@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  hibernate_batch_mysql:
+    image: mariadb
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: spring_batch
+    ports:
+      - "3306:3306"

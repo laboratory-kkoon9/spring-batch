@@ -20,9 +20,9 @@ public class HelloWorld implements Tasklet {
                 .getJobExecution()
                 .getExecutionContext();
 
-        jobContext.put("user.name", name);
+        jobContext.put("name", name);
 
         System.out.println(String.format(HELLO_WORLD, name));
-        return RepeatStatus.FINISHED
+        return RepeatStatus.FINISHED;
     }
 }
