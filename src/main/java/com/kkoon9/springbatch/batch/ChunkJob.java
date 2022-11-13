@@ -43,6 +43,7 @@ public class ChunkJob {
                 .<String, String>chunk(randomCompletionPolicy())
                 .reader(itemReader())
                 .writer(itemWriter())
+                .listener(new LoggingStepStartStopListener())
                 .build();
     }
 
